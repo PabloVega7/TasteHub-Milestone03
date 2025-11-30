@@ -8,13 +8,13 @@ import { Link } from "react-router-dom";
 export default function Navbar() {
   return (
     <Box sx={{ flexGrow: 1, mb: 2 }}>
-      <AppBar position="static" sx={{ backgroundColor: "#2e7d32" }}>
+      <AppBar position="static">
         <Toolbar>
           {/* Logo / App Name */}
           <Typography
             variant="h6"
             component="div"
-            sx={{ flexGrow: 1, fontWeight: 600 }}>
+            sx={{ flexGrow: 1, fontWeight: 600, letterSpacing: "-0.02em" }}>
             TasteHub
           </Typography>
 

@@ -12,8 +12,13 @@ import {
   DialogContentText,
   DialogActions,
   Stack,
+  Snackbar,
+  Alert,
 } from "@mui/material";
+import ShareIcon from "@mui/icons-material/Share";
+import PictureAsPdfIcon from "@mui/icons-material/PictureAsPdf";
 import { useRecipes } from "../context/RecipesContext";
+import { generateRecipePDF } from "../utils/pdfExport";
 
 const STORAGE_KEY = "tastehub-recipes";
 
@@ -22,6 +27,8 @@ export default function RecipeDetails() {
   const navigate = useNavigate();
   const { recipes, deleteRecipe } = useRecipes();
   const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
+  const [snackbarOpen, setSnackbarOpen] = useState(false);
+  const [snackbarMessage, setSnackbarMessage] = useState("");
 
   // If context is empty (edge case) fall back to localStorage
   let allRecipes = recipes;
@@ -77,6 +84,50 @@ export default function RecipeDetails() {
   const handleDelete = () => {
     deleteRecipe(id);
     navigate("/my-recipes");
+  };
+
+  const handleShare = async () => {
+    const recipeUrl = `${window.location.origin}/recipe/${id}`;
+    const shareData = {
+      title: `${title} - Recipe`,
+      text: `Check out this recipe: ${title}`,
+      url: recipeUrl,
+    };
+
+    // Try Web Share API first (works on mobile and some desktop browsers)
+    if (navigator.share) {
+      try {
+        await navigator.share(shareData);
+      } catch (err) {
+        // User cancelled or error occurred
+        if (err.name !== "AbortError") {
+          console.error("Error sharing:", err);
+        }
+      }
+    } else {
+      // Fallback: Copy link to clipboard
+      try {
+        await navigator.clipboard.writeText(recipeUrl);
+        setSnackbarMessage("Recipe link copied to clipboard!");
+        setSnackbarOpen(true);
+      } catch (err) {
+        console.error("Failed to copy:", err);
+        setSnackbarMessage("Failed to copy link. Please copy manually.");
+        setSnackbarOpen(true);
+      }
+    }
+  };
+
+  const handleExportPDF = async () => {
+    try {
+      await generateRecipePDF(recipe);
+      setSnackbarMessage("PDF downloaded successfully!");
+      setSnackbarOpen(true);
+    } catch (error) {
+      console.error("Error generating PDF:", error);
+      setSnackbarMessage("Failed to generate PDF. Please try again.");
+      setSnackbarOpen(true);
+    }
   };
 
   return (
@@ -138,7 +189,7 @@ export default function RecipeDetails() {
         )}
       </Box>
 
-      <Stack direction="row" spacing={2} sx={{ mt: 2 }}>
+      <Stack direction="row" spacing={2} sx={{ mt: 2 }} flexWrap="wrap">
         <Button
           variant="outlined"
           onClick={() => navigate(`/edit-recipe/${id}`)}>
@@ -146,6 +197,19 @@ export default function RecipeDetails() {
         </Button>
         <Button variant="outlined" onClick={() => navigate("/my-recipes")}>
           Back to My Recipes
+        </Button>
+        <Button
+          variant="contained"
+          startIcon={<ShareIcon />}
+          onClick={handleShare}>
+          Share
+        </Button>
+        <Button
+          variant="contained"
+          color="primary"
+          startIcon={<PictureAsPdfIcon />}
+          onClick={handleExportPDF}>
+          Download PDF
         </Button>
         <Button
           variant="contained"
@@ -172,6 +236,19 @@ export default function RecipeDetails() {
           </Button>
         </DialogActions>
       </Dialog>
+
+      <Snackbar
+        open={snackbarOpen}
+        autoHideDuration={3000}
+        onClose={() => setSnackbarOpen(false)}
+        anchorOrigin={{ vertical: "bottom", horizontal: "center" }}>
+        <Alert
+          onClose={() => setSnackbarOpen(false)}
+          severity="success"
+          sx={{ width: "100%" }}>
+          {snackbarMessage}
+        </Alert>
+      </Snackbar>
     </Container>
   );
 }
