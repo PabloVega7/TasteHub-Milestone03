@@ -6,18 +6,14 @@ import CardActionArea from "@mui/material/CardActionArea";
 import Typography from "@mui/material/Typography";
 import { useNavigate } from "react-router-dom";
 
-export default function RecipeCard({ id, title, image, externalUrl }) {
+export default function RecipeCard({ id, title, image, externalUrl, isWebRecipe }) {
   const navigate = useNavigate();
 
-  // Web recipe → external URL in a new tab
-  if (externalUrl) {
+  // Web recipe → navigate to details page (not external URL)
+  if (isWebRecipe || externalUrl) {
     return (
       <Card sx={{ maxWidth: 345, boxShadow: 2, borderRadius: 2 }}>
-        <CardActionArea
-          component="a"
-          href={externalUrl}
-          target="_blank"
-          rel="noopener noreferrer">
+        <CardActionArea onClick={() => navigate(`/recipe/web/${id}`)}>
           <CardMedia
             component="img"
             height="180"

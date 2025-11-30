@@ -1,6 +1,6 @@
 // src/pages/RecipeDetails.jsx
-import { useState } from "react";
-import { useParams, useNavigate } from "react-router-dom";
+import { useState, useEffect } from "react";
+import { useParams, useNavigate, useLocation } from "react-router-dom";
 import {
   Container,
   Typography,
@@ -14,6 +14,7 @@ import {
   Stack,
   Snackbar,
   Alert,
+  CircularProgress,
 } from "@mui/material";
 import ShareIcon from "@mui/icons-material/Share";
 import PictureAsPdfIcon from "@mui/icons-material/PictureAsPdf";
@@ -25,10 +26,74 @@ const STORAGE_KEY = "tastehub-recipes";
 export default function RecipeDetails() {
   const { id } = useParams();
   const navigate = useNavigate();
+  const location = useLocation();
   const { recipes, deleteRecipe } = useRecipes();
   const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
   const [snackbarOpen, setSnackbarOpen] = useState(false);
   const [snackbarMessage, setSnackbarMessage] = useState("");
+  const [webRecipe, setWebRecipe] = useState(null);
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState(null);
+
+  // Check if this is a web recipe
+  const isWebRecipe = location.pathname.includes("/recipe/web/");
+
+  // Fetch web recipe from TheMealDB API
+  useEffect(() => {
+    if (isWebRecipe && id) {
+      setLoading(true);
+      setError(null);
+      fetch(`https://www.themealdb.com/api/json/v1/1/lookup.php?i=${id}`)
+        .then((res) => res.json())
+        .then((data) => {
+          if (data.meals && data.meals.length > 0) {
+            const meal = data.meals[0];
+            
+            // Parse ingredients and measurements
+            const ingredients = [];
+            for (let i = 1; i <= 20; i++) {
+              const ingredient = meal[`strIngredient${i}`];
+              const measure = meal[`strMeasure${i}`];
+              if (ingredient && ingredient.trim()) {
+                ingredients.push(
+                  measure && measure.trim()
+                    ? `${measure.trim()} ${ingredient.trim()}`
+                    : ingredient.trim()
+                );
+              }
+            }
+
+            // Parse instructions (split by newlines or periods)
+            const instructions = meal.strInstructions
+              ? meal.strInstructions
+                  .split(/\r\n|\n|\. /)
+                  .map((line) => line.trim())
+                  .filter((line) => line.length > 0)
+              : [];
+
+            setWebRecipe({
+              id: meal.idMeal,
+              title: meal.strMeal,
+              image: meal.strMealThumb,
+              ingredients: ingredients.join("\n"),
+              instructions: instructions.join("\n"),
+              category: meal.strCategory,
+              area: meal.strArea,
+              source: meal.strSource,
+              youtube: meal.strYoutube,
+            });
+          } else {
+            setError("Recipe not found");
+          }
+          setLoading(false);
+        })
+        .catch((err) => {
+          console.error("Error fetching recipe:", err);
+          setError("Failed to load recipe");
+          setLoading(false);
+        });
+    }
+  }, [isWebRecipe, id]);
 
   // If context is empty (edge case) fall back to localStorage
   let allRecipes = recipes;
@@ -44,17 +109,28 @@ export default function RecipeDetails() {
     }
   }
 
-  const recipe = allRecipes?.find((r) => String(r.id) === String(id)) || null;
+  const localRecipe = allRecipes?.find((r) => String(r.id) === String(id)) || null;
+  const recipe = isWebRecipe ? webRecipe : localRecipe;
 
-  if (!recipe) {
+  if (loading) {
+    return (
+      <Container maxWidth="md" sx={{ mt: 4, textAlign: "center" }}>
+        <CircularProgress sx={{ mt: 4 }} />
+        <Typography variant="body1" sx={{ mt: 2 }}>
+          Loading recipe...
+        </Typography>
+      </Container>
+    );
+  }
+
+  if (error || !recipe) {
     return (
       <Container maxWidth="md" sx={{ mt: 4 }}>
         <Typography variant="h5" fontWeight={700} mb={2}>
           Recipe not found
         </Typography>
         <Typography variant="body1" mb={3}>
-          We couldn&apos;t find this recipe. It might have been deleted or the
-          link is invalid.
+          {error || "We couldn't find this recipe. It might have been deleted or the link is invalid."}
         </Typography>
         <Button
           variant="contained"
@@ -62,9 +138,11 @@ export default function RecipeDetails() {
           onClick={() => navigate("/")}>
           Back to Home
         </Button>
-        <Button variant="outlined" onClick={() => navigate("/my-recipes")}>
-          Go to My Recipes
-        </Button>
+        {!isWebRecipe && (
+          <Button variant="outlined" onClick={() => navigate("/my-recipes")}>
+            Go to My Recipes
+          </Button>
+        )}
       </Container>
     );
   }
@@ -87,10 +165,10 @@ export default function RecipeDetails() {
   };
 
   const handleShare = async () => {
-    const recipeUrl = `${window.location.origin}/recipe/${id}`;
+    const recipeUrl = `${window.location.origin}${isWebRecipe ? `/recipe/web/${id}` : `/recipe/${id}`}`;
     const shareData = {
-      title: `${title} - Recipe`,
-      text: `Check out this recipe: ${title}`,
+      title: `${recipe.title} - Recipe`,
+      text: `Check out this recipe: ${recipe.title}`,
       url: recipeUrl,
     };
 
@@ -189,15 +267,38 @@ export default function RecipeDetails() {
         )}
       </Box>
 
+      {recipe.category && (
+        <Box mb={2}>
+          <Typography variant="body2" color="text.secondary">
+            {recipe.category} {recipe.area && `• ${recipe.area}`}
+          </Typography>
+        </Box>
+      )}
+
       <Stack direction="row" spacing={2} sx={{ mt: 2 }} flexWrap="wrap">
-        <Button
-          variant="outlined"
-          onClick={() => navigate(`/edit-recipe/${id}`)}>
-          Edit Recipe
-        </Button>
-        <Button variant="outlined" onClick={() => navigate("/my-recipes")}>
-          Back to My Recipes
-        </Button>
+        {!isWebRecipe && (
+          <>
+            <Button
+              variant="outlined"
+              onClick={() => navigate(`/edit-recipe/${id}`)}>
+              Edit Recipe
+            </Button>
+            <Button variant="outlined" onClick={() => navigate("/my-recipes")}>
+              Back to My Recipes
+            </Button>
+            <Button
+              variant="contained"
+              color="error"
+              onClick={() => setDeleteDialogOpen(true)}>
+              Delete Recipe
+            </Button>
+          </>
+        )}
+        {isWebRecipe && (
+          <Button variant="outlined" onClick={() => navigate("/")}>
+            Back to Home
+          </Button>
+        )}
         <Button
           variant="contained"
           startIcon={<ShareIcon />}
@@ -211,31 +312,27 @@ export default function RecipeDetails() {
           onClick={handleExportPDF}>
           Download PDF
         </Button>
-        <Button
-          variant="contained"
-          color="error"
-          onClick={() => setDeleteDialogOpen(true)}>
-          Delete Recipe
-        </Button>
       </Stack>
 
-      <Dialog
-        open={deleteDialogOpen}
-        onClose={() => setDeleteDialogOpen(false)}>
-        <DialogTitle>Delete Recipe</DialogTitle>
-        <DialogContent>
-          <DialogContentText>
-            Are you sure you want to delete &quot;{title}&quot;? This action
-            cannot be undone.
-          </DialogContentText>
-        </DialogContent>
-        <DialogActions>
-          <Button onClick={() => setDeleteDialogOpen(false)}>Cancel</Button>
-          <Button onClick={handleDelete} color="error" variant="contained">
-            Delete
-          </Button>
-        </DialogActions>
-      </Dialog>
+      {!isWebRecipe && (
+        <Dialog
+          open={deleteDialogOpen}
+          onClose={() => setDeleteDialogOpen(false)}>
+          <DialogTitle>Delete Recipe</DialogTitle>
+          <DialogContent>
+            <DialogContentText>
+              Are you sure you want to delete &quot;{title}&quot;? This action
+              cannot be undone.
+            </DialogContentText>
+          </DialogContent>
+          <DialogActions>
+            <Button onClick={() => setDeleteDialogOpen(false)}>Cancel</Button>
+            <Button onClick={handleDelete} color="error" variant="contained">
+              Delete
+            </Button>
+          </DialogActions>
+        </Dialog>
+      )}
 
       <Snackbar
         open={snackbarOpen}

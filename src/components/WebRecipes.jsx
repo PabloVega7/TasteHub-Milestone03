@@ -57,7 +57,7 @@ export default function WebRecipes({ searchTerm = "" }) {
           id: meal.idMeal,
           title: meal.strMeal,
           image: meal.strMealThumb,
-          url: `https://www.themealdb.com/meal/${meal.idMeal}`,
+          isWebRecipe: true,
         }));
 
         setWebRecipes(mapped);
@@ -107,7 +107,7 @@ export default function WebRecipes({ searchTerm = "" }) {
             id={recipe.id}
             title={recipe.title}
             image={recipe.image}
-            externalUrl={recipe.url}
+            isWebRecipe={recipe.isWebRecipe}
           />
         </Grid>
       ))}

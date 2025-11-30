@@ -19,6 +19,7 @@ function App() {
           <Navbar />
           <Routes>
             <Route path="/" element={<Home />} />
+            <Route path="/recipe/web/:id" element={<RecipeDetails />} />
             <Route path="/recipe/:id" element={<RecipeDetails />} />
             <Route path="/my-recipes" element={<MyRecipes />} />
             <Route path="/add-recipe" element={<AddRecipe />} />
