@@ -9,7 +9,7 @@ import { useNavigate } from "react-router-dom";
 export default function RecipeCard({ id, title, image, externalUrl }) {
   const navigate = useNavigate();
 
-  // Web recipe → external URL in a new tab
+  // If externalUrl is provided, this is a "web recipe" card.
   if (externalUrl) {
     return (
       <Card sx={{ maxWidth: 345, boxShadow: 2, borderRadius: 2 }}>
@@ -39,10 +39,10 @@ export default function RecipeCard({ id, title, image, externalUrl }) {
     );
   }
 
-  // Your recipe → go to /recipe/:id
+  // Otherwise, it’s one of *your* recipes → go to details page.
   return (
     <Card sx={{ maxWidth: 345, boxShadow: 2, borderRadius: 2 }}>
-      <CardActionArea onClick={() => navigate(`/recipe/${id}`)}>
+      <CardActionArea onClick={() => navigate(`/recipes/${id}`)}>
         <CardMedia
           component="img"
           height="180"

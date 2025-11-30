@@ -23,8 +23,8 @@ export default function AddRecipe() {
       instructions: instructions.trim(),
     });
 
-    // go to /recipe/:id using that id
-    navigate(`/recipe/${newId}`);
+    // go to /recipes/:id using that id
+    navigate(`/recipes/${newId}`);
   };
 
   return (

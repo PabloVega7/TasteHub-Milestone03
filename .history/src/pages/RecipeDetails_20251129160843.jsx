@@ -1,18 +1,6 @@
 // src/pages/RecipeDetails.jsx
-import { useState } from "react";
 import { useParams, useNavigate } from "react-router-dom";
-import {
-  Container,
-  Typography,
-  Box,
-  Button,
-  Dialog,
-  DialogTitle,
-  DialogContent,
-  DialogContentText,
-  DialogActions,
-  Stack,
-} from "@mui/material";
+import { Container, Typography, Box, Button } from "@mui/material";
 import { useRecipes } from "../context/RecipesContext";
 
 const STORAGE_KEY = "tastehub-recipes";
@@ -20,8 +8,7 @@ const STORAGE_KEY = "tastehub-recipes";
 export default function RecipeDetails() {
   const { id } = useParams();
   const navigate = useNavigate();
-  const { recipes, deleteRecipe } = useRecipes();
-  const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
+  const { recipes } = useRecipes();
 
   // If context is empty (edge case) fall back to localStorage
   let allRecipes = recipes;
@@ -73,11 +60,6 @@ export default function RecipeDetails() {
     .split("\n")
     .map((line) => line.trim())
     .filter(Boolean);
-
-  const handleDelete = () => {
-    deleteRecipe(id);
-    navigate("/my-recipes");
-  };
 
   return (
     <Container maxWidth="md" sx={{ mt: 4, mb: 6 }}>
@@ -138,40 +120,9 @@ export default function RecipeDetails() {
         )}
       </Box>
 
-      <Stack direction="row" spacing={2} sx={{ mt: 2 }}>
-        <Button
-          variant="outlined"
-          onClick={() => navigate(`/edit-recipe/${id}`)}>
-          Edit Recipe
-        </Button>
-        <Button variant="outlined" onClick={() => navigate("/my-recipes")}>
-          Back to My Recipes
-        </Button>
-        <Button
-          variant="contained"
-          color="error"
-          onClick={() => setDeleteDialogOpen(true)}>
-          Delete Recipe
-        </Button>
-      </Stack>
-
-      <Dialog
-        open={deleteDialogOpen}
-        onClose={() => setDeleteDialogOpen(false)}>
-        <DialogTitle>Delete Recipe</DialogTitle>
-        <DialogContent>
-          <DialogContentText>
-            Are you sure you want to delete &quot;{title}&quot;? This action
-            cannot be undone.
-          </DialogContentText>
-        </DialogContent>
-        <DialogActions>
-          <Button onClick={() => setDeleteDialogOpen(false)}>Cancel</Button>
-          <Button onClick={handleDelete} color="error" variant="contained">
-            Delete
-          </Button>
-        </DialogActions>
-      </Dialog>
+      <Button variant="outlined" onClick={() => navigate("/my-recipes")}>
+        Back to My Recipes
+      </Button>
     </Container>
   );
 }

@@ -39,10 +39,10 @@ export default function RecipeCard({ id, title, image, externalUrl }) {
     );
   }
 
-  // Your recipe → go to /recipe/:id
+  // Your recipe → go to /recipes/:id
   return (
     <Card sx={{ maxWidth: 345, boxShadow: 2, borderRadius: 2 }}>
-      <CardActionArea onClick={() => navigate(`/recipe/${id}`)}>
+      <CardActionArea onClick={() => navigate(`/recipes/${id}`)}>
         <CardMedia
           component="img"
           height="180"

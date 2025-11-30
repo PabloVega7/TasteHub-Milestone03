@@ -1,9 +1,10 @@
-/* eslint-disable react-refresh/only-export-components */
+// src/context/RecipesContext.jsx
 import { createContext, useContext, useEffect, useState } from "react";
 
 const RecipesContext = createContext();
 const STORAGE_KEY = "tastehub-recipes";
 
+// Default starter recipes
 const defaultRecipes = [
   {
     id: "1",
@@ -36,7 +37,7 @@ export function RecipesProvider({ children }) {
     return defaultRecipes;
   });
 
-  // keep localStorage in sync
+  // Sync to localStorage whenever recipes change
   useEffect(() => {
     try {
       localStorage.setItem(STORAGE_KEY, JSON.stringify(recipes));
@@ -45,13 +46,12 @@ export function RecipesProvider({ children }) {
     }
   }, [recipes]);
 
-  // ALWAYS generate and return an id
-  const addRecipe = (recipeData) => {
-    const id = Date.now().toString(); // simple unique-ish id
-    const recipe = { ...recipeData, id };
-
+  // Add recipe and return the id so we can navigate to it
+  const addRecipe = (newRecipe) => {
+    const id = newRecipe.id || Date.now().toString();
+    const recipe = { ...newRecipe, id };
     setRecipes((prev) => [...prev, recipe]);
-    return id; // important: we return the id we just created
+    return id;
   };
 
   const updateRecipe = (id, updated) => {
@@ -66,13 +66,9 @@ export function RecipesProvider({ children }) {
     setRecipes((prev) => prev.filter((r) => String(r.id) !== String(id)));
   };
 
-  const getRecipeById = (id) => {
-    return recipes.find((r) => String(r.id) === String(id)) || null;
-  };
-
   return (
     <RecipesContext.Provider
-      value={{ recipes, addRecipe, updateRecipe, deleteRecipe, getRecipeById }}>
+      value={{ recipes, addRecipe, updateRecipe, deleteRecipe }}>
       {children}
     </RecipesContext.Provider>
   );

@@ -1,4 +1,4 @@
-/* eslint-disable react-refresh/only-export-components */
+// src/context/RecipesContext.jsx
 import { createContext, useContext, useEffect, useState } from "react";
 
 const RecipesContext = createContext();
@@ -66,13 +66,9 @@ export function RecipesProvider({ children }) {
     setRecipes((prev) => prev.filter((r) => String(r.id) !== String(id)));
   };
 
-  const getRecipeById = (id) => {
-    return recipes.find((r) => String(r.id) === String(id)) || null;
-  };
-
   return (
     <RecipesContext.Provider
-      value={{ recipes, addRecipe, updateRecipe, deleteRecipe, getRecipeById }}>
+      value={{ recipes, addRecipe, updateRecipe, deleteRecipe }}>
       {children}
     </RecipesContext.Provider>
   );

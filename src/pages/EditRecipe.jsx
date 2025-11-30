@@ -7,14 +7,20 @@ import {
   Button,
   Box,
   Stack,
+  Dialog,
+  DialogTitle,
+  DialogContent,
+  DialogContentText,
+  DialogActions,
 } from "@mui/material";
 import { useNavigate, useParams } from "react-router-dom";
 import { useRecipes } from "../context/RecipesContext";
 
 export default function EditRecipe() {
   const { id } = useParams();
-  const { getRecipeById, updateRecipe } = useRecipes();
+  const { getRecipeById, updateRecipe, deleteRecipe } = useRecipes();
   const navigate = useNavigate();
+  const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
 
   const recipe = getRecipeById(id);
 
@@ -80,6 +86,11 @@ export default function EditRecipe() {
     navigate(`/recipe/${id}`);
   };
 
+  const handleDelete = () => {
+    deleteRecipe(id);
+    navigate("/my-recipes");
+  };
+
   return (
     <Container maxWidth="md" sx={{ mt: 4, mb: 6 }}>
       <Typography variant="h4" fontWeight={700} mb={3}>
@@ -141,8 +152,33 @@ export default function EditRecipe() {
           <Button variant="outlined" onClick={() => navigate(-1)}>
             Cancel
           </Button>
+          <Button
+            variant="contained"
+            color="error"
+            onClick={() => setDeleteDialogOpen(true)}
+            sx={{ ml: "auto" }}>
+            Delete Recipe
+          </Button>
         </Stack>
       </Box>
+
+      <Dialog
+        open={deleteDialogOpen}
+        onClose={() => setDeleteDialogOpen(false)}>
+        <DialogTitle>Delete Recipe</DialogTitle>
+        <DialogContent>
+          <DialogContentText>
+            Are you sure you want to delete &quot;{title}&quot;? This action
+            cannot be undone.
+          </DialogContentText>
+        </DialogContent>
+        <DialogActions>
+          <Button onClick={() => setDeleteDialogOpen(false)}>Cancel</Button>
+          <Button onClick={handleDelete} color="error" variant="contained">
+            Delete
+          </Button>
+        </DialogActions>
+      </Dialog>
     </Container>
   );
 }

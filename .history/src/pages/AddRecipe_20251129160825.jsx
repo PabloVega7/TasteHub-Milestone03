@@ -15,16 +15,14 @@ export default function AddRecipe() {
   const handleSubmit = (e) => {
     e.preventDefault();
 
-    // send data to context, get back the id we generated there
-    const newId = addRecipe({
+    const id = addRecipe({
       title: title.trim(),
       image: image.trim(),
       ingredients: ingredients.trim(),
       instructions: instructions.trim(),
     });
 
-    // go to /recipe/:id using that id
-    navigate(`/recipe/${newId}`);
+    navigate(`/recipes/${id}`);
   };
 
   return (
