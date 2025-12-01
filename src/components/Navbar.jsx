@@ -21,8 +21,12 @@ export default function Navbar() {
                         sx={{
                             flexGrow: 1,
                             fontWeight: 600,
-                            letterSpacing: "-0.02em",
-                        }}></Typography>
+                            letterSpacing: "0.02em",
+                            fontFamily: "Retrograde",
+                            fontSize: "1.5rem",
+                        }}>
+                        Mealio
+                    </Typography>
 
                     {/* Navigation Buttons */}
                     <Button 

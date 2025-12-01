@@ -106,6 +106,15 @@ const theme = createTheme({
                     borderColor: "rgba(16, 16, 126, 1)",
                     borderWeight: 2,
                 },
+                recipe: {
+                    borderRadius: 8,
+                    backgroundColor: "rgba(16, 16, 126, 1)",
+                    padding: "8px 20px",
+                    fontWeight: 500,
+                    borderColor: "rgba(16, 16, 126, 1)",
+                    borderWeight: 2,
+                    color: "#ffffff",
+                },
                 contained: {
                     boxShadow: "0 1px 3px 0 rgba(0, 0, 0, 0.1), 0 1px 2px 0 rgba(0, 0, 0, 0.06)",
                     "&:hover": {
@@ -142,7 +151,7 @@ const theme = createTheme({
         MuiAppBar: {
             styleOverrides: {
                 root: {
-                    boxShadow: "0 1px 3px 0 rgba(0, 0, 0, 0.1), 0 1px 2px 0 rgba(0, 0, 0, 0.06)",
+                    boxShadow: "rgba(8, 32, 126, 0.72)",
                     background: "#F7F3E6",
                 },
             },
