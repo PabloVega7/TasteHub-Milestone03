@@ -6,32 +6,38 @@ import Button from "@mui/material/Button";
 import { Link } from "react-router-dom";
 
 export default function Navbar() {
-  return (
-    <Box sx={{ flexGrow: 1, mb: 2 }}>
-      <AppBar position="static">
-        <Toolbar>
-          {/* Logo / App Name */}
-          <Typography
-            variant="h6"
-            component="div"
-            sx={{ flexGrow: 1, fontWeight: 600, letterSpacing: "-0.02em" }}>
-            TasteHub
-          </Typography>
+    return (
+        <Box sx={{ flexGrow: 1, mb: 2 }}>
+            <AppBar position='static' mbz>
+                <Toolbar>
+                    {/* Logo / App Name */}
+                    <img
+                        src='/src/assets/Logo.png'
+                        alt='TasteHub Logo'
+                        style={{ height: 60, marginRight: 10 }}
+                    />
+                    <Typography
+                        component='div'
+                        sx={{
+                            flexGrow: 1,
+                            fontWeight: 600,
+                            letterSpacing: "-0.02em",
+                        }}></Typography>
 
-          {/* Navigation Buttons */}
-          <Button color="inherit" component={Link} to="/">
-            Home
-          </Button>
+                    {/* Navigation Buttons */}
+                    <Button color='inherit' component={Link} to='/'>
+                        Home
+                    </Button>
 
-          <Button color="inherit" component={Link} to="/my-recipes">
-            My Recipes
-          </Button>
+                    <Button color='inherit' component={Link} to='/my-recipes'>
+                        My Recipes
+                    </Button>
 
-          <Button color="inherit" component={Link} to="/add-recipe">
-            Add Recipe
-          </Button>
-        </Toolbar>
-      </AppBar>
-    </Box>
-  );
+                    <Button color='inherit' component={Link} to='/add-recipe'>
+                        Add Recipe
+                    </Button>
+                </Toolbar>
+            </AppBar>
+        </Box>
+    );
 }

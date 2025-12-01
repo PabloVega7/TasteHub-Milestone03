@@ -8,7 +8,7 @@ const theme = createTheme({
             main: "rgba(16, 16, 126, 1)", // Deep blue
             light: "#87c1f4ff",
             dark: "#28211C",
-            contrastText: "#ffffff",
+            contrastText: "rgba(16, 16, 126, 1)",
         },
         background: {
             default: "#F7F3E6", // Cream
@@ -87,7 +87,7 @@ const theme = createTheme({
             fontWeight: 500,
             letterSpacing: "0.01em",
             borderColor: "rgba(16, 16, 126, 1)",
-            borderWeight: 2,
+            borderWidth: 2,
         },
         subtitle1: {
             fontFamily: "Inter",
@@ -143,7 +143,7 @@ const theme = createTheme({
             styleOverrides: {
                 root: {
                     boxShadow: "0 1px 3px 0 rgba(0, 0, 0, 0.1), 0 1px 2px 0 rgba(0, 0, 0, 0.06)",
-                    background: "linear-gradient(135deg, #667eea 0%, #764ba2 100%)",
+                    background: "#F7F3E6",
                 },
             },
         },
