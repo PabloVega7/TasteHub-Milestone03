@@ -8,7 +8,7 @@ const theme = createTheme({
             main: "rgba(16, 16, 126, 1)", // Deep blue
             light: "#87c1f4ff",
             dark: "#28211C",
-            contrastText: "#ffffff", // White text for contrast on dark blue background
+            contrastText: "rgba(16, 16, 126, 1)",
         },
         background: {
             default: "#F7F3E6", // Cream
@@ -106,6 +106,12 @@ const theme = createTheme({
                     borderColor: "rgba(16, 16, 126, 1)",
                     borderWeight: 2,
                 },
+                nav: {
+                    "&:hover": {
+                        backgroundColor: "rgba(16, 16, 126, 1)",
+                        color: "#ffffff",
+                    },
+                },
                 recipe: {
                     borderRadius: 8,
                     backgroundColor: "rgba(16, 16, 126, 1)",
@@ -114,6 +120,57 @@ const theme = createTheme({
                     borderColor: "rgba(16, 16, 126, 1)",
                     borderWeight: 2,
                     color: "#ffffff",
+                    "&:hover": {
+                        backgroundColor: "#87c1f4c5",
+                        borderColor: "rgba(16, 16, 126, 1)",
+                        borderWeight: 2,
+                        color: "rgba(16, 16, 126, 1)",
+                    },
+                },
+                share: {
+                    borderRadius: 8,
+                    backgroundColor: "rgba(16, 16, 126, 1)",
+                    padding: "8px 20px",
+                    fontWeight: 500,
+                    borderColor: "rgba(16, 16, 126, 1)",
+                    borderWeight: 2,
+                    color: "#ffffff",
+                    "&:hover": {
+                        backgroundColor: "#87c1f4c5",
+                        borderColor: "rgba(16, 16, 126, 1)",
+                        borderWeight: 2,
+                        color: "rgba(16, 16, 126, 1)",
+                    },
+                },
+                download: {
+                    borderRadius: 8,
+                    backgroundColor: "rgba(16, 16, 126, 1)",
+                    padding: "8px 20px",
+                    fontWeight: 500,
+                    borderColor: "rgba(16, 16, 126, 1)",
+                    borderWeight: 2,
+                    color: "#ffffff",
+                    "&:hover": {
+                        backgroundColor: "#87c1f4c5",
+                        borderColor: "rgba(16, 16, 126, 1)",
+                        borderWeight: 2,
+                        color: "rgba(16, 16, 126, 1)",
+                    },
+                },
+                save: {
+                    borderRadius: 8,
+                    backgroundColor: "rgba(16, 16, 126, 1)",
+                    padding: "8px 20px",
+                    fontWeight: 500,
+                    borderColor: "rgba(16, 16, 126, 1)",
+                    borderWeight: 2,
+                    color: "#ffffff",
+                    "&:hover": {
+                        backgroundColor: "#87c1f4c5",
+                        borderColor: "rgba(16, 16, 126, 1)",
+                        borderWeight: 2,
+                        color: "rgba(16, 16, 126, 1)",
+                    },
                 },
                 contained: {
                     boxShadow: "0 1px 3px 0 rgba(0, 0, 0, 0.1), 0 1px 2px 0 rgba(0, 0, 0, 0.06)",

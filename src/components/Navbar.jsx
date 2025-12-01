@@ -29,27 +29,30 @@ export default function Navbar() {
                     </Typography>
 
                     {/* Navigation Buttons */}
-                    <Button 
-                        color='inherit' 
-                        component={Link} 
+                    <Button
+                        variant='nav'
+                        color='inherit'
+                        component={Link}
                         to='/'
-                        sx={{ color: 'rgba(16, 16, 126, 1)' }}>
+                        sx={{ color: "rgba(16, 16, 126, 1)" }}>
                         Home
                     </Button>
 
-                    <Button 
-                        color='inherit' 
-                        component={Link} 
+                    <Button
+                        variant='nav'
+                        color='inherit'
+                        component={Link}
                         to='/my-recipes'
-                        sx={{ color: 'rgba(16, 16, 126, 1)' }}>
+                        sx={{ color: "rgba(16, 16, 126, 1)" }}>
                         My Recipes
                     </Button>
 
-                    <Button 
-                        color='inherit' 
-                        component={Link} 
+                    <Button
+                        variant='nav'
+                        color='inherit'
+                        component={Link}
                         to='/add-recipe'
-                        sx={{ color: 'rgba(16, 16, 126, 1)' }}>
+                        sx={{ color: "rgba(16, 16, 126, 1)" }}>
                         Add Recipe
                     </Button>
                 </Toolbar>

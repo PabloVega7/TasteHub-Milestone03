@@ -297,11 +297,11 @@ export default function RecipeDetails() {
                         Back to Home
                     </Button>
                 )}
-                <Button variant='contained' startIcon={<ShareIcon />} onClick={handleShare}>
+                <Button variant='share' startIcon={<ShareIcon />} onClick={handleShare}>
                     Share
                 </Button>
                 <Button
-                    variant='contained'
+                    variant='download'
                     color='primary'
                     startIcon={<PictureAsPdfIcon />}
                     onClick={handleExportPDF}>
